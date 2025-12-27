@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Connect</title>
+    <style>
+        / * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #fafafa;
+            color: #262626;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .auth-box h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #667eea;
+            font-size: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-google {
+            background: white;
+            color: #555;
+            border: 2px solid #e0e0e0;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-google:hover {
+            background: #f5f5f5;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .auth-switch a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Main App */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 70px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .search-results {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            top: 50px;
+        }
+
+        .search-result-item {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: #fafafa;
+        }
+
+        .search-result-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+        }
+
+        /* Home Page */
+        .feed {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .post-header {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .post-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 600px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .post-actions {
+            padding: 12px 16px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.liked {
+            color: #ed4956;
+        }
+
+        .post-likes {
+            padding: 0 16px 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-caption {
+            padding: 0 16px 12px;
+            font-size: 14px;
+        }
+
+        .post-caption strong {
+            margin-right: 6px;
+        }
+
+        .post-comments {
+            padding: 0 16px 12px;
+        }
+
+        .comment {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .comment strong {
+            margin-right: 6px;
+        }
+
+        .comment-input-container {
+            border-top: 1px solid #efefef;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .comment-post-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .comment-post-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Messages Page */
+        .messages-container {
+            display: flex;
+            height: calc(100vh - 130px);
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .conversations-list {
+            width: 350px;
+            border-right: 1px solid #dbdbdb;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .conversation-item:hover {
+            background: #fafafa;
+        }
+
+        .conversation-item.active {
+            background: #f0f0f0;
+        }
+
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .conversation-preview {
+            font-size: 13px;
+            color: #8e8e8e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 16px;
+            border-bottom: 1px solid #dbdbdb;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #667eea;
+            color: white;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: #efefef;
+            color: #262626;
+        }
+
+        .message-time {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        .chat-input-container {
+            padding: 16px;
+            border-top: 1px solid #dbdbdb;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #dbdbdb;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Profile Page */
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .profile-avatar-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 48px;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-username {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            font-size: 16px;
+        }
+
+        .stat strong {
+            font-weight: 600;
+        }
+
+        .follow-btn {
+            padding: 8px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .follow-btn.following {
+            background: white;
+            color: #262626;
+            border: 1px solid #dbdbdb;
+        }
+
+        .profile-posts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .profile-post-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: #f0f0f0;
+        }
+
+        .profile-post-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #dbdbdb;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #262626;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        /* Upload Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #dbdbdb;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .caption-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #efefef;
+            color: #262626;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-post {
+            flex: 1;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-post:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8e8e8e;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .conversations-list {
+                width: 100%;
+            }
+
+            .chat-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                display: none;
+            }
+
+            .chat-area.active {
+                display: flex;
+            }
+
+            .back-btn {
+                display: block;
+            }
+
+            .conversations-list.hidden-mobile {
+                display: none;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+
+            .profile-posts {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2px;
+            }
+        }* (ALL your existing CSS remains exactly the same) */
+        /* No changes here — keep your original styles */
+    </style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="auth-container">
+    <div class="auth-box">
+        <h1>Social Connect</h1>
+        <div id="loginError" class="error-message hidden"></div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password">
+        </div>
+
+        <button class="btn btn-primary" id="loginBtn">Login</button>
+
+        <button class="btn btn-google" id="googleLoginBtn">
+            <span>🔍</span> Continue with Google
+        </button>
+
+        <div class="auth-switch">
+            Don't have an account? <a id="showSignupLink">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="auth-container hidden">
+    <div class="auth-box">
+        <h1>Create Account</h1>
+        <div id="signupError" class="error-message hidden"></div>
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="signupUsername" placeholder="Choose a username">
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email">
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Create a password">
+        </div>
+
+        <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+
+        <button class="btn btn-google" id="googleSignupBtn">
+            <span>🔍</span> Continue with Google
+        </button>
+
+        <div class="auth-switch">
+            Already have an account? <a id="showLoginLink">Login</a>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="hidden">
+    <!-- HEADER + SEARCH -->
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search users...">
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+        <div id="searchResults" class="search-results hidden"></div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div id="homePage" class="feed"></div>
+        <div id="messagesPage" class="hidden"></div>
+        <div id="profilePage" class="hidden"></div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+        <button class="nav-item active" id="homeNav">🏠</button>
+        <button class="nav-item" id="searchNav">🔍</button>
+        <button class="nav-item" id="uploadNav">➕</button>
+        <button class="nav-item" id="messagesNav">💬</button>
+        <button class="nav-item" id="profileNav">👤</button>
+    </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div id="uploadModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Create New Post</h2>
+
+        <div class="upload-area" id="uploadArea">
+            <p>📷 Click to select an image</p>
+            <input type="file" id="imageInput" accept="image/*" style="display:none;">
+        </div>
+
+        <img id="previewImage" class="preview-image hidden">
+        <textarea class="caption-input" id="captionInput" placeholder="Write a caption..."></textarea>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" id="cancelUpload">Cancel</button>
+            <button class="btn-post" id="postUpload">Post</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+<script>
+    // 🔥 FIREBASE CONFIG — REPLACE WITH YOUR OWN
+    const firebaseConfig = {
+        apiKey: "AIzaSyCLoHkmtIUoslGaoiKAIasenYyyP-wApb8",
+  authDomain: "saugram4-bef9c.firebaseapp.com",
+  databaseURL: "https://saugram4-bef9c-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "saugram4-bef9c",
+  storageBucket: "saugram4-bef9c.firebasestorage.app",
+  messagingSenderId: "553742384416",
+  appId: "1:553742384416:web:4d8025005fa4608533ab45",
+  measurementId: "G-1E5C9TFXBJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+    const storage = firebase.storage();
+
+    // ===================================
+    //        AUTH LISTEN
+    // ===================================
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            displayMainApp();
+        } else {
+            showLoginPage();
+        }
+    });
+
+    // ===================================
+    //        UI SHOW / HIDE
+    // ===================================
+    function showLoginPage(){
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('signupPage').classList.add('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    }
+
+    function showSignupPage(){
+        document.getElementById('signupPage').classList.remove('hidden');
+        document.getElementById('loginPage').classList.add('hidden');
+    }
+
+    function displayMainApp(){
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('signupPage').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+
+        loadFeed();
+    }
+
+    document.getElementById('showSignupLink').onclick = showSignupPage;
+    document.getElementById('showLoginLink').onclick  = showLoginPage;
+
+    // ===================================
+    //        USER AUTH
+    // ===================================
+    document.getElementById('loginBtn').onclick = async () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass  = document.getElementById('loginPassword').value;
+
+        try {
+            await auth.signInWithEmailAndPassword(email, pass);
+        } catch(err){
+            alert(err.message);
+        }
+    };
+
+    document.getElementById('signupBtn').onclick = async () => {
+        const email = document.getElementById('signupEmail').value;
+        const pass  = document.getElementById('signupPassword').value;
+        const username = document.getElementById('signupUsername').value;
+
+        try {
+            const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+
+            await db.collection("users").doc(userCred.user.uid).set({
+                username: username,
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        } catch(err){
+            alert(err.message);
+        }
+    };
+
+    document.getElementById('googleLoginBtn').onclick = async () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            await auth.signInWithPopup(provider);
+        } catch(err){
+            alert(err.message);
+        }
+    };
+
+    // ===================================
+    //        LOGOUT
+    // ===================================
+    document.getElementById('logoutBtn').onclick = () => {
+        auth.signOut();
+    };
+
+    // ===================================
+    //        FEED / POSTS
+    // ===================================
+    async function loadFeed(){
+        const feed = document.getElementById('homePage');
+        feed.innerHTML = "";
+
+        const snapshot = await db.collection("posts").orderBy("createdAt","desc").get();
+        snapshot.forEach(doc => {
+            const post = doc.data();
+
+            const html = `
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-user">
+                            <div class="post-avatar">${post.username.charAt(0).toUpperCase()}</div>
+                            <div class="post-username">${post.username}</div>
+                        </div>
+                    </div>
+                    <img class="post-image" src="${post.imageUrl}">
+                    <div class="post-caption"><strong>${post.username}</strong> ${post.caption}</div>
+                </div>
+            `;
+
+            feed.insertAdjacentHTML("beforeend", html);
+        });
+    }
+
+    // ===================================
+    //        UPLOAD POST
+    // ===================================
+    document.getElementById("uploadNav").onclick = () => {
+        document.getElementById("uploadModal").classList.remove("hidden");
+    };
+
+    document.getElementById("cancelUpload").onclick = () => {
+        document.getElementById("uploadModal").classList.add("hidden");
+    };
+
+    document.getElementById("imageInput").onchange = e => {
+        const file = e.target.files[0];
+        document.getElementById("previewImage").src = URL.createObjectURL(file);
+        document.getElementById("previewImage").classList.remove("hidden");
+    };
+
+    document.getElementById("postUpload").onclick = async () => {
+        const file = document.getElementById("imageInput").files[0];
+        const caption = document.getElementById("captionInput").value;
+        const user    = auth.currentUser;
+
+        if(!file) return alert("Choose image!");
+
+        const storageRef = storage.ref().child("posts/" + Date.now() + "_" + file.name);
+        await storageRef.put(file);
+        const imageUrl = await storageRef.getDownloadURL();
+
+        await db.collection("posts").add({
+            uid: user.uid,
+            username: user.displayName || user.email.split("@")[0],
+            imageUrl: imageUrl,
+            caption: caption,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        document.getElementById("uploadModal").classList.add("hidden");
+        loadFeed();
+    };
+</script>
+
+</body>
+</html>
